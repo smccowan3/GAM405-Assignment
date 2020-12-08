@@ -6,8 +6,16 @@ public class PlayerAttributes : MonoBehaviour
 {
     public int playerLevel = 1;
     public bool alive = true;
-    public float jumpHeight = 5;
+
+    [SerializeField]
+    public float jumpHeight = 5f;
+    public float moveSpeed = 5f;
+
+    Rigidbody rb;
     public int breakStrength = 100;
+    bool onGround = false;
+    float dirX;
+    bool dblJump = false;
 
     void becomeDead()
     {
@@ -27,23 +35,50 @@ public class PlayerAttributes : MonoBehaviour
         }
     }
 
-    void Jump()
-    {
-        GetComponent<Rigidbody>().velocity = Vector2.up * jumpHeight; 
-    }
-
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Jump"))
+        Debug.Log(rb.velocity.y);
+        //check if on ground
+        if (rb.velocity.y == 0)
+            onGround = true;
+        else
+            onGround = false;
+
+        if (onGround)
+            dblJump = true;
+
+        if (onGround && Input.GetButtonDown("Jump"))
         {
             Jump();
         }
+        else if (dblJump && Input.GetButtonDown("Jump"))
+        {
+            Jump();
+            dblJump = false;
+        }
+        dirX = Input.GetAxis("Horizontal") * moveSpeed;
+        if (rb.velocity.y <= 0.01 && rb.velocity.y >= -0.01)
+        {
+            rb.velocity = Vector2.zero;
+        }
+
+    }
+    void FixedUpdate()
+    {
+        rb.velocity = new Vector2(dirX, rb.velocity.y);
+    }
+
+
+    void Jump()
+    {
+        rb.velocity = new Vector2(rb.velocity.x, 0f);
+        rb.velocity = Vector2.up * jumpHeight;
     }
 }
