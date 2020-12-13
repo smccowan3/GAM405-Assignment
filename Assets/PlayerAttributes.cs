@@ -11,7 +11,7 @@ public class PlayerAttributes : MonoBehaviour
     public float jumpHeight = 5f;
     public float moveSpeed = 5f;
 
-    Rigidbody rb;
+    Rigidbody2D rb;
     public int breakStrength = 100;
     bool onGround = false;
     float dirX;
@@ -38,7 +38,7 @@ public class PlayerAttributes : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
