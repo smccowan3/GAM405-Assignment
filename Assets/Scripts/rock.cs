@@ -18,7 +18,6 @@ public class rock : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(framecount);
         if (isStationary())
         {
             framecount++;
@@ -27,25 +26,19 @@ public class rock : MonoBehaviour
         {
             framecount = 0;
         }
-        if (framecount > 6000)
+        if (framecount > 600)
         {
-            Debug.Log("condition fulfilled");
-            rockbody.velocity = Vector2.down;
+            rockbody.gravityScale = 1;
         }
     }
 
     bool isStationary()
     {
         bool stationary = false;
-        if (player.GetComponent<Rigidbody2D>().velocity.y == 0 && player.GetComponent<Rigidbody2D>().velocity.x == 0) //initially stationary
+        if (player.GetComponent<Rigidbody2D>().velocity.y ==0 && player.GetComponent<Rigidbody2D>().velocity.x == 0) //initially stationary
         {
             stationary = true;
         }
             return stationary;
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        player.GetComponent<PlayerAttributes>().becomeDead();
     }
 }

@@ -4,37 +4,19 @@ using UnityEngine;
 
 public class PlayerAttributes : MonoBehaviour
 {
-    public int playerLevel = 1;
+    public int playerLevel = 0;
     public bool alive = true;
-
-    [SerializeField]
     public float jumpHeight = 5f;
     public float moveSpeed = 5f;
-
+    
     Rigidbody2D rb;
+    public GameObject prefab;
     public int breakStrength = 100;
     bool onGround = false;
     float dirX;
     bool dblJump = false;
-
-    public void becomeDead()
-    {
-        alive = false;
-        playerLevel++;
-        Debug.Log("yay you died");
-    }
-
-    void breakSomething(int something)
-    {
-        if (breakStrength >= something)
-        {
-            Debug.Log("wow you broke something");
-        }
-        else if (breakStrength < something)
-        {
-            Debug.Log("darn you didnt break something");
-        }
-    }
+    bool sideCollision = false;
+  
 
     // Start is called before the first frame update
     void Start()
@@ -46,7 +28,7 @@ public class PlayerAttributes : MonoBehaviour
     void Update()
     {
         //check if on ground
-        if (rb.velocity.y == 0)
+        if (rb.velocity.y == 0 & sideCollision == false)
             onGround = true;
         else
             onGround = false;
@@ -64,21 +46,72 @@ public class PlayerAttributes : MonoBehaviour
             dblJump = false;
         }
         dirX = Input.GetAxis("Horizontal") * moveSpeed;
-        if (rb.velocity.y <= 0.01 && rb.velocity.y >= -0.01)
+        FlipSprite(dirX);
+        if (rb.velocity.y <= 0.01 && rb.velocity.y >= -0.01 && rb.velocity.x <= 0.01 && rb.velocity.x >= -0.01)
         {
             rb.velocity = Vector2.zero;
         }
-
     }
+
+
+    //below is physics functions
+    void FlipSprite(float directionX)
+    {
+        if (directionX > 0)
+        {
+            GetComponent<SpriteRenderer>().flipX = true;
+        }
+        else if (directionX < 0)
+        {
+            GetComponent<SpriteRenderer>().flipX = false;
+        }
+    }
+
+
+    public void CollisionDetectedCircle(CircleCol circleCollision)
+    {
+        sideCollision = true;
+    }
+
+    public void CollisionDetectedBox(BoxCol BoxCollision)
+    {
+        sideCollision = false;
+    }
+
+
     void FixedUpdate()
     {
         rb.velocity = new Vector2(dirX, rb.velocity.y);
     }
 
-
     void Jump()
     {
         rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.velocity = Vector2.up * jumpHeight;
+    }
+
+    //Below is player interaction functions
+
+    void breakSomething(int something)
+    {
+        if (breakStrength >= something)
+        {
+            Debug.Log("wow you broke something");
+        }
+        else if (breakStrength < something)
+        {
+            Debug.Log("darn you didnt break something");
+        }
+    }
+
+
+    public void becomeDead()
+    {
+        alive = false;
+        playerLevel++;
+        Debug.Log("yay you died");
+        Instantiate(prefab, GetComponent<Transform>().position, GetComponent<Transform>().rotation);
+        prefab.GetComponent<SpriteRenderer>().flipX = GetComponent<SpriteRenderer>().flipX;
+        GetComponent<SpriteRenderer>().enabled = false;
     }
 }
