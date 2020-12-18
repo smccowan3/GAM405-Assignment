@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class PlayerAttributes : MonoBehaviour
 {
-    public int playerLevel = 0;
-    public bool alive = true;
+    public bool jumpStatus = false;
+    public bool breakStatus = false;
     public float jumpHeight = 5f;
     public float moveSpeed = 5f;
+    public bool currentlyBreaking = false;
     
     Rigidbody2D rb;
-    public GameObject prefab;
-    public int breakStrength = 100;
+    
     bool onGround = false;
     float dirX;
     bool dblJump = false;
@@ -27,7 +27,7 @@ public class PlayerAttributes : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //check if on ground
+        //y movement
         if (rb.velocity.y == 0 & sideCollision == false)
             onGround = true;
         else
@@ -36,25 +36,32 @@ public class PlayerAttributes : MonoBehaviour
         if (onGround)
             dblJump = true;
 
-        if (onGround && Input.GetButtonDown("Jump"))
+        if (onGround && Input.GetButtonDown("Jump") && jumpStatus)
         {
             Jump();
         }
-        else if (dblJump && Input.GetButtonDown("Jump"))
+        else if (dblJump && Input.GetButtonDown("Jump") && jumpStatus)
         {
             Jump();
             dblJump = false;
         }
+
+        // x movement
         dirX = Input.GetAxis("Horizontal") * moveSpeed;
         FlipSprite(dirX);
         if (rb.velocity.y <= 0.01 && rb.velocity.y >= -0.01 && rb.velocity.x <= 0.01 && rb.velocity.x >= -0.01)
         {
             rb.velocity = Vector2.zero;
         }
+
+        //breaking
+        if (Input.GetKeyDown(KeyCode.E) && breakStatus)
+        {
+            breakSomething();
+        }
     }
 
 
-    //below is physics functions
     void FlipSprite(float directionX)
     {
         if (directionX > 0)
@@ -71,6 +78,14 @@ public class PlayerAttributes : MonoBehaviour
     public void CollisionDetectedCircle(CircleCol circleCollision)
     {
         sideCollision = true;
+        if (currentlyBreaking)
+        {
+            if (circleCollision.gameObject.name == "brick")
+            {
+                Debug.Log("breaking collision occured");
+                gameObject.SetActive(false);
+            }
+        }
     }
 
     public void CollisionDetectedBox(BoxCol BoxCollision)
@@ -90,28 +105,25 @@ public class PlayerAttributes : MonoBehaviour
         rb.velocity = Vector2.up * jumpHeight;
     }
 
-    //Below is player interaction functions
-
-    void breakSomething(int something)
+    void breakSomething()
     {
-        if (breakStrength >= something)
+        Debug.Log("now breaking");
+        float breakMultip = -1;
+        if (GetComponent<SpriteRenderer>().flipX)
         {
-            Debug.Log("wow you broke something");
+            breakMultip = 1;
         }
-        else if (breakStrength < something)
-        {
-            Debug.Log("darn you didnt break something");
-        }
+        GetComponent<Transform>().rotation = Quaternion.Euler(0, 0, -45* breakMultip);
+        GetComponent<Transform>().position += new Vector3(0.2f * breakMultip, 0.01f * breakMultip, 0);
+        currentlyBreaking = true;
+        StartCoroutine(WaitBreak());
     }
 
-
-    public void becomeDead()
+    IEnumerator WaitBreak()
     {
-        alive = false;
-        playerLevel++;
-        Debug.Log("yay you died");
-        Instantiate(prefab, GetComponent<Transform>().position, GetComponent<Transform>().rotation);
-        prefab.GetComponent<SpriteRenderer>().flipX = GetComponent<SpriteRenderer>().flipX;
-        GetComponent<SpriteRenderer>().enabled = false;
+        yield return new WaitForSeconds(0.3f);
+        currentlyBreaking = false;
+        GetComponent<Transform>().rotation = new Quaternion(0, 0, 0, 0);
     }
+ 
 }

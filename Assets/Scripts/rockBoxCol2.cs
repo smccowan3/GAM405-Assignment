@@ -9,7 +9,7 @@ public class rockBoxCol2 : MonoBehaviour
     {
         if (collision.gameObject.name == "PlayerObject")
         {
-            player.GetComponent<PlayerAttributes>().becomeDead();
+            player.GetComponent<PlayerRespawn>().becomeDead(1);
         }
     }
 }

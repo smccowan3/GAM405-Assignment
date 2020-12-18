@@ -10,7 +10,7 @@ public class Magpie : MonoBehaviour
     {
         if (collision.gameObject.name == "PlayerObject")
         {
-            player.GetComponent<PlayerAttributes>().becomeDead();
+            player.GetComponent<PlayerRespawn>().becomeDead(2);
         }
         else
         {
@@ -29,7 +29,5 @@ public class Magpie : MonoBehaviour
             GetComponent<SpriteRenderer>().flipX = false;
         }
     }
-
-
 
 }
