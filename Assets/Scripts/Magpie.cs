@@ -2,24 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Magpie : MonoBehaviour
+public class Magpie : killingObject
 {
     public int multip = 1;
-    public GameObject player;
+    void Awake()
+    {
+        deathCode = 2;
+    }
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.name == "PlayerObject")
         {
-            player.GetComponent<PlayerRespawn>().becomeDead(2);
+            player.GetComponent<PlayerRespawn>().becomeDead(deathCode); 
         }
         else
         {
-            multip = multip * -1;
+            multip = multip * -1; // move in opposite direction
         }
     }
     void FixedUpdate()
     {
-        GetComponent<Rigidbody2D>().velocity = new Vector2(10 * multip, 0);
+        GetComponent<Rigidbody2D>().velocity = new Vector2(8 * multip, 0); // move left and right
         if (multip == 1)
         {
             GetComponent<SpriteRenderer>().flipX = true;

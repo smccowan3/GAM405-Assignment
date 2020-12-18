@@ -9,26 +9,34 @@ public class PlayerLevelling : MonoBehaviour
     public GameObject LevelTextObject;
     public TextMeshProUGUI LevelText;
     public GameObject nxtPowerUpObject;
+    public GameObject victoryScreen;
     public TextMeshProUGUI nxtPowerUp;
+    
 
     private void Awake()
     {
-        LevelText = LevelTextObject.GetComponent<TextMeshProUGUI>();
-        nxtPowerUp = nxtPowerUpObject.GetComponent<TextMeshProUGUI>();
+        LevelText = LevelTextObject.GetComponent<TextMeshProUGUI>(); // bottom right text
+        nxtPowerUp = nxtPowerUpObject.GetComponent<TextMeshProUGUI>(); // middle text
     }
 
     void Update()
     {
-        LevelUpAbilities();
+        LevelUpAbilities(); // this is the new abilities you gain
         DisplayAbilities();
+        if (playerLevel >= 6)
+        {
+            victoryScreen.SetActive(true); // for the win
+        }
+
     }
 
     void LevelUpAbilities()
     {
         if (playerLevel >= 2)
         {
+            
             GetComponent<PlayerAttributes>().jumpStatus = true;
-        }
+        }   
         if (playerLevel >= 5)
         {
             GetComponent<PlayerAttributes>().breakStatus = true;
@@ -44,11 +52,11 @@ public class PlayerLevelling : MonoBehaviour
            
         else if (playerLevel >= 2 && playerLevel < 4)
         {
-            nxtPowerUp.SetText("Current Power Ups: Jumping " + "\n" + "Next: 4 Unique Deaths (Break Walls)");
+            nxtPowerUp.SetText("Current Power Ups: Jumping. Press Space" + "\n" + "Next: 4 Unique Deaths (Break Walls)");
         }
         else if (playerLevel >=5)
         {
-            nxtPowerUp.SetText("Current Power Ups: Jumping and Breaking");
+            nxtPowerUp.SetText("Current Power Ups: Jumping and Breaking" + "\n" + "Press E to break");
         }
     }
 }

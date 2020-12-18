@@ -2,14 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class rockBoxCol2 : MonoBehaviour
+public class rockBoxCol2 : killingObject
 {
-    public GameObject player;
-    void OnCollisionEnter2D(Collision2D collision)
+    void Awake()
     {
-        if (collision.gameObject.name == "PlayerObject")
-        {
-            player.GetComponent<PlayerRespawn>().becomeDead(1);
-        }
+        deathCode = 1;
     }
 }

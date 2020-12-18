@@ -9,6 +9,8 @@ public class PlayerAttributes : MonoBehaviour
     public float jumpHeight = 5f;
     public float moveSpeed = 5f;
     public bool currentlyBreaking = false;
+    public bool onPlate = false;
+    public GameObject brickBreakable;
     
     Rigidbody2D rb;
     
@@ -36,20 +38,20 @@ public class PlayerAttributes : MonoBehaviour
         if (onGround)
             dblJump = true;
 
-        if (onGround && Input.GetButtonDown("Jump") && jumpStatus)
+        if (onGround && Input.GetButtonDown("Jump") && jumpStatus) // check on ground and if jump level reached
         {
             Jump();
         }
-        else if (dblJump && Input.GetButtonDown("Jump") && jumpStatus)
+        else if (dblJump && Input.GetButtonDown("Jump") && jumpStatus) // check for double jump and if jump level reached
         {
             Jump();
             dblJump = false;
         }
 
         // x movement
-        dirX = Input.GetAxis("Horizontal") * moveSpeed;
+        dirX = Input.GetAxis("Horizontal") * moveSpeed; // x axis movement
         FlipSprite(dirX);
-        if (rb.velocity.y <= 0.01 && rb.velocity.y >= -0.01 && rb.velocity.x <= 0.01 && rb.velocity.x >= -0.01)
+        if (rb.velocity.y <= 0.01 && rb.velocity.y >= -0.01 && rb.velocity.x <= 0.01 && rb.velocity.x >= -0.01) //smooth gravity a bit and enable other scripts
         {
             rb.velocity = Vector2.zero;
         }
@@ -61,6 +63,16 @@ public class PlayerAttributes : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (currentlyBreaking)
+        {
+            if (collision.gameObject.name == "brickBreakable")
+            {
+                collision.gameObject.SetActive(false);
+            }
+        }
+    }
 
     void FlipSprite(float directionX)
     {
@@ -74,23 +86,17 @@ public class PlayerAttributes : MonoBehaviour
         }
     }
 
+   
 
     public void CollisionDetectedCircle(CircleCol circleCollision)
     {
-        sideCollision = true;
-        if (currentlyBreaking)
-        {
-            if (circleCollision.gameObject.name == "brick")
-            {
-                Debug.Log("breaking collision occured");
-                gameObject.SetActive(false);
-            }
-        }
+        sideCollision = true; // collider will pass to this
+        
     }
 
     public void CollisionDetectedBox(BoxCol BoxCollision)
     {
-        sideCollision = false;
+        sideCollision = false; // collider will pass to this
     }
 
 
@@ -105,9 +111,8 @@ public class PlayerAttributes : MonoBehaviour
         rb.velocity = Vector2.up * jumpHeight;
     }
 
-    void breakSomething()
+    void breakSomething() // used when break is gained. tilts model forward and breaks
     {
-        Debug.Log("now breaking");
         float breakMultip = -1;
         if (GetComponent<SpriteRenderer>().flipX)
         {
@@ -123,7 +128,7 @@ public class PlayerAttributes : MonoBehaviour
     {
         yield return new WaitForSeconds(0.3f);
         currentlyBreaking = false;
-        GetComponent<Transform>().rotation = new Quaternion(0, 0, 0, 0);
+        GetComponent<Transform>().rotation = new Quaternion(0, 0, 0, 0); // reset
     }
  
 }

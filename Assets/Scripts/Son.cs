@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class Son : MonoBehaviour
+public class Son : killingObject
 {
     public GameObject speechBubble;
     public GameObject textObject;
     public TextMeshProUGUI text;
-    public GameObject player;
     public Rigidbody2D rb;
     void Awake()
     {
+        deathCode = 3;
         speechBubble = GameObject.Find("speech bubble"); // set up objects at runtime
         speechBubble.GetComponent<SpriteRenderer>().enabled = false;
         textObject = GameObject.Find("Son words");
@@ -31,12 +31,12 @@ public class Son : MonoBehaviour
             if (collision.gameObject.GetComponent<Finances>().financialStatus == "ambiguous")
             {
                 text.SetText("I hate you dad");
-                player.GetComponent<PlayerRespawn>().becomeDead(3); // kill
+                player.GetComponent<PlayerRespawn>().becomeDead(deathCode); // kill
             }
             else if (collision.gameObject.GetComponent<Finances>().financialStatus == "poor")
             {
                 text.SetText("I still hate you dad");
-                player.GetComponent<PlayerRespawn>().becomeDead(4); // kill 
+                player.GetComponent<PlayerRespawn>().becomeDead(deathCode + 1); // kill 
             }
             else if (collision.gameObject.GetComponent<Finances>().financialStatus == "wealthy")
             {
@@ -53,6 +53,8 @@ public class Son : MonoBehaviour
         {
             speechBubble.GetComponent<SpriteRenderer>().enabled = false;
             text.SetText("");
+            gameObject.GetComponent<BoxCollider2D>().enabled = true;
+            rb.isKinematic = false;
         }
     }
     void DisableBody()

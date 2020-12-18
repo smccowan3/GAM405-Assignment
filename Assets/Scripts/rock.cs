@@ -28,7 +28,7 @@ public class rock : MonoBehaviour
         }
         if (framecount > 600)
         {
-            rockbody.gravityScale = 1;
+            rockbody.gravityScale = 1; // drop rock after set time
         }
     }
 

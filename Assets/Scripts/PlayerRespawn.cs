@@ -25,13 +25,13 @@ public class PlayerRespawn : MonoBehaviour
     }
     void Update()
     {
-        if (alive == false)
+        if (alive == false && GetComponent<PlayerLevelling>().playerLevel <=5)
         {
             TextDisplay(); // display gui for tab to respawn
             Respawn();
             StartCoroutine(WaitRespawn());
         }
-        else if (alive)
+        else if (alive && GetComponent<PlayerLevelling>().playerLevel <= 5)
         {
             TextHide();
         }

@@ -10,6 +10,6 @@ public class CircleCol : Collider
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
-        transform.parent.GetComponent<PlayerAttributes>().CollisionDetectedCircle(this);
+        transform.parent.GetComponent<PlayerAttributes>().CollisionDetectedCircle(this); // pass to parent
     }
 }

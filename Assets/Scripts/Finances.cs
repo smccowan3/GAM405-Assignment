@@ -16,7 +16,7 @@ public class Finances : MonoBehaviour
        {
             financialStatus = "ambiguous";
             EnablePowerUps();
-            textObject.GetComponent<TextMeshProUGUI>().SetText("Financially Ambiguous");
+            textObject.GetComponent<TextMeshProUGUI>().SetText("Financially Ambiguous"); // this is base financial state
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -24,14 +24,14 @@ public class Finances : MonoBehaviour
         if (collision.gameObject.name == "Life Insurance")
         {
             financialStatus = "wealthy";
-            textObject.GetComponent<TextMeshProUGUI>().SetText("Insured");
+            textObject.GetComponent<TextMeshProUGUI>().SetText("Insured"); // this will pass through son
             DisablePowerUps();
 
         }
         if (collision.gameObject.name == "Tax")
         {
             financialStatus = "poor";
-            textObject.GetComponent<TextMeshProUGUI>().SetText("Taxed to Oblivion");
+            textObject.GetComponent<TextMeshProUGUI>().SetText("Taxed to Oblivion"); // fourth hidden death condition
             DisablePowerUps();
         }
     }

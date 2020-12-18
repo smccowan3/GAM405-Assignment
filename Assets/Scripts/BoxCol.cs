@@ -10,6 +10,6 @@ public class BoxCol : Collider
     }
     void OnCollisionEnter2D(Collision2D collision)
     {
-        transform.parent.GetComponent<PlayerAttributes>().CollisionDetectedBox(this);
+        transform.parent.GetComponent<PlayerAttributes>().CollisionDetectedBox(this); // passes to parent
     }
 }
