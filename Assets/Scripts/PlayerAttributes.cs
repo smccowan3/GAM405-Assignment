@@ -9,7 +9,6 @@ public class PlayerAttributes : MonoBehaviour
     public float jumpHeight = 5f;
     public float moveSpeed = 5f;
     public bool currentlyBreaking = false;
-    public bool onPlate = false;
     public GameObject brickBreakable;
     
     Rigidbody2D rb;
